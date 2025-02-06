@@ -1,0 +1,7 @@
+backend/app/apis/prompts.py
+frontend/src/api/endpoints.ts
+backend/main.py
+.env.local
+frontend/src/components/Sidebar.tsx
+backend/app/apis/__init__.py
+backend/app/core/config.py

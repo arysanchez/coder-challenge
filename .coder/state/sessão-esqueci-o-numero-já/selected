@@ -1,0 +1,6 @@
+frontend/src/components/Sidebar.tsx
+frontend/src/App.tsx
+frontend/src/components/ChatMessage.tsx
+frontend/src/components/ChatInput.tsx
+frontend/src/api/endpoints.ts
+frontend/src/types.ts

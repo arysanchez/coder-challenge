@@ -1,0 +1,7 @@
+frontend/src/components/Sidebar.tsx
+frontend/src/api/endpoints.ts
+backend/app/apis/prompts.py
+frontend/src/types.ts
+frontend/index.html
+backend/app/models/prompt.py
+frontend/favicon.ico
