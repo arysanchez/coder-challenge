@@ -30,6 +30,7 @@ class CreatePromptRequest(BaseModel):
     ownerId: str
 
 class PromptResponse(BaseModel):
+    id: str
     title: str
     description: str
 

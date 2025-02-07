@@ -75,6 +75,7 @@ export function Sidebar({
   };
 
   const handlePromptSelect = (promptId: string) => {
+    console.log("promptId", promptId);
     setSelectedPrompts(prev => 
       prev.includes(promptId)
         ? prev.filter(id => id !== promptId)

@@ -1,3 +1,25 @@
+To understand why `prompt.id` is coming empty in the `Sidebar.tsx` component, we need to trace the flow of data from the backend to the frontend.
+
+1. **Backend: `prompts.py`**
+   - The `list_external_prompts` function fetches prompts from an external API and maps them to `PromptResponse` objects.
+   - The `PromptResponse` model does not include an `id` field.
+
+2. **Frontend: `endpoints.ts`**
+   - The `fetchPrompts` function calls the backend API to get the list of prompts.
+   - The `Prompt` interface in `types.ts` expects an `id` field, but the backend does not provide it.
+
+3. **Frontend: `Sidebar.tsx`**
+   - The `prompts` state is populated with the data fetched by `fetchPrompts`.
+   - Since the `id` field is missing, `prompt.id` is empty.
+
+### Solution:
+- Update the backend to include an `id` field in the `PromptResponse` model.
+- Ensure the external API response includes an `id` field or generate a unique identifier for each prompt.
+
+### Updated `prompts.py`:
+
+### backend/app/apis/prompts.py [coder:save]
+```python
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List
 import httpx
@@ -19,7 +41,7 @@ async def list_external_prompts():
         external_prompts = response.json()
         if not isinstance(external_prompts, list):
             raise HTTPException(status_code=500, detail="Invalid response format from external API")
-        return [PromptResponse(title=prompt["title"], description=prompt["description"], prompt=prompt["prompt"], id=prompt["id"]) for prompt in external_prompts]
+        return [PromptResponse(id=prompt["id"], title=prompt["title"], description=prompt["description"], prompt=prompt["prompt"]) for prompt in external_prompts]
 
 @router.post("/create-prompt", response_model=PromptResponse)
 async def create_external_prompt(request: CreatePromptRequest):
@@ -38,4 +60,50 @@ async def create_external_prompt(request: CreatePromptRequest):
         except httpx.HTTPStatusError as exc:
             raise HTTPException(status_code=exc.response.status_code, detail=f"Error from external API: {exc.response.text}")
         created_prompt = response.json()
-        return PromptResponse(title=created_prompt["title"], description=created_prompt["description"], prompt=created_prompt["prompt"])
+        return PromptResponse(id=created_prompt["id"], title=created_prompt["title"], description=created_prompt["description"])
+```
+[coder:end]
+
+### Updated `prompt.py`:
+
+### backend/app/models/prompt.py [coder:save]
+```python
+from pydantic import BaseModel
+from typing import List
+from datetime import datetime
+
+class PromptVariable(BaseModel):
+    name: str
+    title: str
+
+class Prompt(BaseModel):
+    id: str
+    title: str
+    description: str
+    prompt: str
+    variables: List[PromptVariable] = []
+    visibleTo: str
+    visibleToGroups: List[str]
+    categories: List[str]
+    createdAt: datetime
+    updatedAt: datetime
+    isOwner: bool
+    ownerId: str
+
+class CreatePromptRequest(BaseModel):
+    title: str
+    description: str
+    prompt: str
+    visibleTo: str
+    visibleToGroups: List[str]
+    categories: List[str]
+    ownerId: str
+
+class PromptResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+```
+[coder:end]
+
+With these changes, the backend will now include the `id` field in the `PromptResponse` model, ensuring that the frontend receives the `id` field for each prompt. This should resolve the issue of `prompt.id` being empty in the `Sidebar.tsx` component.

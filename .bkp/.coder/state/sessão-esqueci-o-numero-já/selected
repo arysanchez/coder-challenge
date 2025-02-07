@@ -1,0 +1,8 @@
+frontend/src/components/Sidebar.tsx
+frontend/src/api/endpoints.ts
+backend/app/apis/prompts.py
+frontend/src/types.ts
+backend/app/models/prompt.py
+frontend/src/App.tsx
+frontend/src/components/ChatMessage.tsx
+frontend/src/components/ChatInput.tsx

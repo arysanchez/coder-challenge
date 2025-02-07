@@ -1,6 +1,6 @@
 # Context
 
-Selected files (* marked) complete source code.
+All files complete source code.
 
 ## Project Structure
 
@@ -8,6 +8,9 @@ Selected files (* marked) complete source code.
 ├── .bolt/
 │   ├── config.json
 │   └── prompt
+├── .vscode/
+│   ├── chatHistory.json
+│   └── launch.json
 ├── backend/
 │   ├── app/
 │   │   ├── apis/
@@ -23,15 +26,15 @@ Selected files (* marked) complete source code.
 ├── frontend/
 │   ├── src/
 │   │   ├── api/
-│   │   │   └── endpoints.ts *
+│   │   │   └── endpoints.ts
 │   │   ├── components/
-│   │   │   ├── ChatInput.tsx *
-│   │   │   ├── ChatMessage.tsx *
-│   │   │   └── Sidebar.tsx *
-│   │   ├── App.tsx *
+│   │   │   ├── ChatInput.tsx
+│   │   │   ├── ChatMessage.tsx
+│   │   │   └── Sidebar.tsx
+│   │   ├── App.tsx
 │   │   ├── index.css
 │   │   ├── main.tsx
-│   │   ├── types.ts *
+│   │   ├── types.ts
 │   │   └── vite-env.d.ts
 │   ├── eslint.config.js
 │   ├── favicon.ico
@@ -47,6 +50,199 @@ Selected files (* marked) complete source code.
 └── README.md
 
 ## File Contents
+
+### .bolt/config.json
+```
+{
+  "template": "bolt-vite-react-ts"
+}
+```
+
+### .bolt/prompt
+```
+For all designs I ask you to make, have them be beautiful, not cookie cutter. Make webpages that are fully featured and worthy for production.
+
+By default, this template supports JSX syntax with Tailwind CSS classes, React hooks, and Lucide React for icons. Do not install other packages for UI themes, icons, etc unless absolutely necessary or I request them.
+
+Use icons from lucide-react for logos.
+
+Use stock photos from unsplash where appropriate, only valid URLs you know exist. Do not download the images, only link to them in image tags.
+```
+
+### .vscode/chatHistory.json
+```
+[
+  {
+    "content": "como iniciar um repositorio",
+    "role": "user",
+    "name": "coderExtensionChat"
+  },
+  {
+    "content": "Para iniciar e configurar um repositório Git, você pode seguir os passos abaixo:\n\n1. **Instale o Git**: Se ainda não o fez, você precisa instalar o Git em sua máquina. Você pode baixar e instalar a versão mais recente do Git a partir do site oficial: [https://git-scm.com/](https://git-scm.com/).\n\n2. **Configurar o Git**: Depois de instalar o Git, é recomendável configurar seu nome de usuário e endereço de e-mail. Estes serão usados para identificar as suas alterações.\n\n   ```bash\n   git config --global user.name \"Seu Nome\"\n   git config --global user.email \"seu-email@example.com\"\n   ```\n\n3. **Iniciar um repositório**: Navegue até o diretório onde você quer criar o repositório e inicialize um novo repositório Git. Aqui estão os comandos:\n\n   ```bash\n   cd /caminho/para/seu/projeto\n   git init\n   ```\n\n4. **Adicionar arquivos e fazer o primeiro commit**:\n   - Adicione os arquivos que deseja monitorar (ou todos os arquivos do diretório) ao repositório e faça o primeiro commit:\n\n   ```bash\n   git add .\n   git commit -m \"Primeiro commit\"\n   ```\n\n5. **Conectar a um repositório remoto** (opcional, mas comum):\n   - Se você quiser conectar seu repositório local a um repositório remoto (por exemplo, no GitHub, GitLab ou Bitbucket), você pode usar o comando `git remote add` para adicionar o URL do repositório remoto:\n\n   ```bash\n   git remote add origin https://github.com/usuario/repositorio.git\n   git branch -M main\n   git push -u origin main\n   ```\n\nAgora você tem um repositório Git inicializado e conectado a um repositório remoto (se aplicável). Este é apenas o começo, mas cobre os fundamentos de iniciar e configurar um repositório Git.",
+    "role": "assistant",
+    "name": "coderExtensionChat"
+  }
+]
+```
+
+### .vscode/launch.json
+```
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Sidebar Component",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "sourceMaps": true,
+      "trace": true,
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    }
+  ]
+}
+```
+
+### backend/app/apis/__init__.py
+```
+from fastapi import APIRouter
+from .prompts import router as prompts_router
+
+router = APIRouter()
+router.include_router(prompts_router, prefix="/v1/prompt-templates", tags=["prompts"])
+```
+
+### backend/app/apis/prompts.py
+```
+from fastapi import APIRouter, HTTPException, Depends
+from typing import List
+import httpx
+import os
+from ..models.prompt import Prompt, CreatePromptRequest, PromptResponse, prompts_db
+
+router = APIRouter()
+
+EXTERNAL_API_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3Q3V4MXM4V0dfYWNRZE5VLWh3bG1YNGtTV1c5Uzl3dV9oaHVIZVA2TlEiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJmZGUwYzc5Yi1lZjA5LTQ1MGYtYTUwOS0zZDAzMmNlMjFlODUiLCJpc3MiOiJodHRwczovL2NpdGZsb3dkZXZiMmMuYjJjbG9naW4uY29tL2QxZGVhMWU1LThhZWItNDE3ZS1hMWIyLWQ4NDAyZmNmNGE4Zi92Mi4wLyIsImV4cCI6MTczODg4MTk1NCwibmJmIjoxNzM4Nzk1NTU0LCJzdWIiOiIwYzEwMDhhMi01YTIyLTRkODgtYTZlMS1hOGUxYmY0YzEwOGYiLCJlbWFpbCI6ImFyeXNhbmNoZXpAY2lhbmR0LmNvbSIsImdpdmVuX25hbWUiOiJBcnkiLCJmYW1pbHlfbmFtZSI6IkhlbnJpcXVlIGRhIEx1eiBTYW5jaGV6IiwibmFtZSI6IkFyeSBIZW5yaXF1ZSBkYSBMdXogU2FuY2hleiIsImlkcCI6Imdvb2dsZS5jb20iLCJjaGFubmVsIjoicG9ydGFsIiwidGVuYW50IjoiY2l0LWRldiIsInJvbGVzIjoiZmxvd2NvcmUudXNlcixiYWNrbG9ncmVmaW5lci51c2VyLGNoYXR3aXRoZG9jcy51c2VyLGdhbGF4eW9wcy51c2VyIiwidGlkIjoiZDFkZWExZTUtOGFlYi00MTdlLWExYjItZDg0MDJmY2Y0YThmIiwiYXpwIjoiZmRlMGM3OWItZWYwOS00NTBmLWE1MDktM2QwMzJjZTIxZTg1IiwidmVyIjoiMS4wIiwiaWF0IjoxNzM4Nzk1NTU0fQ.REOeDg3AGv4RVDDQ_Kv7WSP1c_0Gbyk4RHiZQwlfppQ59AKbUGQR3vYMACsGzyj0Vp4QNKcDCWpVNGQ8AevG9mHYfjtcNTlqvXqyWyNQ6yYHJxxykbOsIZJsLJ-JI95Mu9GmKpHDMaKKTpkJQ9sX_CZlxrA2OJbklCNtENY5B3jDoYetF_VLByI1zNawG-ij_cOPADAvXndfNzflgcO1t0qukOflV09NS1FnO7ogkUHFpfRy3Ly3sS5f1FFHBVBGiqduDoWEBOLzZdqMHBxL_bYVaFlO1gTyrDLzzn2MsY8gcpOs-CxhJlVPOj1QLeqnXhlLsclyz5HRUnYKsmb8Ew"
+
+@router.get("/list-prompt", response_model=List[PromptResponse])
+async def list_external_prompts():
+    headers = {
+        "Authorization": f"Bearer {EXTERNAL_API_TOKEN}"
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.get("https://dev.flow.ciandt.com/channels-service/v1/prompt-templates", headers=headers)
+        response.raise_for_status()
+        external_prompts = response.json()
+        if not isinstance(external_prompts, list):
+            raise HTTPException(status_code=500, detail="Invalid response format from external API")
+        return [PromptResponse(title=prompt["title"], description=prompt["description"], prompt=prompt["prompt"], id=prompt["id"]) for prompt in external_prompts]
+
+@router.post("/create-prompt", response_model=PromptResponse)
+async def create_external_prompt(request: CreatePromptRequest):
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {EXTERNAL_API_TOKEN}"
+    }
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.post(
+                "https://dev.flow.ciandt.com/channels-service/v1/prompt-templates",
+                json=request.dict(),
+                headers=headers
+            )
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            raise HTTPException(status_code=exc.response.status_code, detail=f"Error from external API: {exc.response.text}")
+        created_prompt = response.json()
+        return PromptResponse(title=created_prompt["title"], description=created_prompt["description"], prompt=created_prompt["prompt"])
+```
+
+### backend/app/core/__init__.py
+```
+# This file can be left empty or used for initialization code for the core module
+```
+
+### backend/app/core/config.py
+```
+# Configuration settings can be added here
+```
+
+### backend/app/models/__init__.py
+```
+# This file can be left empty or used for initialization code for the models module
+```
+
+### backend/app/models/prompt.py
+```
+from pydantic import BaseModel
+from typing import List
+from datetime import datetime
+
+class PromptVariable(BaseModel):
+    name: str
+    title: str
+
+class Prompt(BaseModel):
+    id: str
+    title: str
+    description: str
+    prompt: str
+    variables: List[PromptVariable] = []
+    visibleTo: str
+    visibleToGroups: List[str]
+    categories: List[str]
+    createdAt: datetime
+    updatedAt: datetime
+    isOwner: bool
+    ownerId: str
+
+class CreatePromptRequest(BaseModel):
+    title: str
+    description: str
+    prompt: str
+    visibleTo: str
+    visibleToGroups: List[str]
+    categories: List[str]
+    ownerId: str
+
+class PromptResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+
+# In-memory storage for prompts
+prompts_db = []
+```
+
+### backend/main.py
+```
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.apis.prompts import router as prompts_router
+
+app = FastAPI()
+
+# Configuração do CORS
+origins = [
+    "http://localhost:3000",  # Adicione o endereço do seu frontend aqui
+    "http://127.0.0.1:3000",  # Adicione o endereço do seu frontend aqui
+    "http://localhost:5173",  # Adicione o endereço do seu frontend aqui
+    "http://127.0.0.1:5173",  # Adicione o endereço do seu frontend aqui
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(prompts_router, prefix="/api")
+```
 
 ### frontend/src/api/endpoints.ts
 ```
@@ -300,6 +496,7 @@ export function Sidebar({
   };
 
   const handlePromptSelect = (promptId: string) => {
+    console.log("promptId", promptId);
     setSelectedPrompts(prev => 
       prev.includes(promptId)
         ? prev.filter(id => id !== promptId)
@@ -668,6 +865,56 @@ function App() {
 export default App;
 ```
 
+### frontend/src/index.css
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+}
+
+/* Smooth scrolling */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+}
+
+/* Transitions */
+.dark {
+  color-scheme: dark;
+}
+```
+
+### frontend/src/main.tsx
+```
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+```
+
 ### frontend/src/types.ts
 ```
 export interface Message {
@@ -709,6 +956,308 @@ export interface ApiResponse<T> {
   data: T;
   error?: string;
 }
+```
+
+### frontend/src/vite-env.d.ts
+```
+/// <reference types="vite/client" />
+```
+
+### frontend/eslint.config.js
+```
+import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  }
+);
+```
+
+### frontend/favicon.ico (binary)
+
+### frontend/index.html
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coder & Furious</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
+```
+
+### frontend/package.json
+```
+{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.344.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
+  }
+}
+```
+
+### frontend/postcss.config.js
+```
+export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+```
+
+### frontend/tailwind.config.js
+```
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      animation: {
+        'fade-in': 'fadeIn 0.2s ease-in-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+```
+
+### frontend/tsconfig.app.json
+```
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
+```
+
+### frontend/tsconfig.json
+```
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+```
+
+### frontend/tsconfig.node.json
+```
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}
+```
+
+### frontend/vite.config.ts
+```
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+});
+```
+
+### .env.local
+```
+# Environment variables for local development
+DATABASE_URL=sqlite:///./test.db
+SECRET_KEY=your_secret_key
+EXTERNAL_API_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3Q3V4MXM4V0dfYWNRZE5VLWh3bG1YNGtTV1c5Uzl3dV9oaHVIZVA2TlEiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJmZGUwYzc5Yi1lZjA5LTQ1MGYtYTUwOS0zZDAzMmNlMjFlODUiLCJpc3MiOiJodHRwczovL2NpdGZsb3dkZXZiMmMuYjJjbG9naW4uY29tL2QxZGVhMWU1LThhZWItNDE3ZS1hMWIyLWQ4NDAyZmNmNGE4Zi92Mi4wLyIsImV4cCI6MTczODg4MTk1NCwibmJmIjoxNzM4Nzk1NTU0LCJzdWIiOiIwYzEwMDhhMi01YTIyLTRkODgtYTZlMS1hOGUxYmY0YzEwOGYiLCJlbWFpbCI6ImFyeXNhbmNoZXpAY2lhbmR0LmNvbSIsImdpdmVuX25hbWUiOiJBcnkiLCJmYW1pbHlfbmFtZSI6IkhlbnJpcXVlIGRhIEx1eiBTYW5jaGV6IiwibmFtZSI6IkFyeSBIZW5yaXF1ZSBkYSBMdXogU2FuY2hleiIsImlkcCI6Imdvb2dsZS5jb20iLCJjaGFubmVsIjoicG9ydGFsIiwidGVuYW50IjoiY2l0LWRldiIsInJvbGVzIjoiZmxvd2NvcmUudXNlcixiYWNrbG9ncmVmaW5lci51c2VyLGNoYXR3aXRoZG9jcy51c2VyLGdhbGF4eW9wcy51c2VyIiwidGlkIjoiZDFkZWExZTUtOGFlYi00MTdlLWExYjItZDg0MDJmY2Y0YThmIiwiYXpwIjoiZmRlMGM3OWItZWYwOS00NTBmLWE1MDktM2QwMzJjZTIxZTg1IiwidmVyIjoiMS4wIiwiaWF0IjoxNzM4Nzk1NTU0fQ.REOeDg3AGv4RVDDQ_Kv7WSP1c_0Gbyk4RHiZQwlfppQ59AKbUGQR3vYMACsGzyj0Vp4QNKcDCWpVNGQ8AevG9mHYfjtcNTlqvXqyWyNQ6yYHJxxykbOsIZJsLJ-JI95Mu9GmKpHDMaKKTpkJQ9sX_CZlxrA2OJbklCNtENY5B3jDoYetF_VLByI1zNawG-ij_cOPADAvXndfNzflgcO1t0qukOflV09NS1FnO7ogkUHFpfRy3Ly3sS5f1FFHBVBGiqduDoWEBOLzZdqMHBxL_bYVaFlO1gTyrDLzzn2MsY8gcpOs-CxhJlVPOj1QLeqnXhlLsclyz5HRUnYKsmb8Ew
+EXTERNAL_API_URL=https://dev.flow.ciandt.com/
+```
+
+### README.md
+```
+# Project Name
+
+This project is a web application that includes both a backend and a frontend. The backend is built with FastAPI, and the frontend is built with React.
+
+## Backend Setup
+
+### Prerequisites
+
+- Python 3.8+
+- pip (Python package installer)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-repo/project-name.git
+   cd project-name
+   ```
+
+2. Create a virtual environment:
+
+   ```bash
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+
+   - On Windows:
+
+     ```bash
+     venv\Scripts\activate
+     ```
+
+   - On macOS/Linux:
+
+     ```bash
+     source venv/bin/activate
+     ```
+
+4. Install the required dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Set up environment variables:
+
+   Create a `.env.local` file in the root directory and add the following environment variables:
+
+   ```env
+   DATABASE_URL=sqlite:///./test.db
+   SECRET_KEY=your_secret_key
+   ACCESS_TOKEN_EXPIRE_MINUTES=30
+   EXTERNAL_API_URL=https://dev.flow.ciandt.com/channels-service/v1
+   EXTERNAL_API_TOKEN=your_external_api_token
+   ```
+
+### Running the Server
+
+1. Navigate to the backend directory:
+
+   ```bash
+   cd backend/app
+   ```
+
+2. Start the FastAPI server using Uvicorn:
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+   The `--reload` flag will auto-reload the server on code changes. The server will be running at `http://localhost:8000`.
+
+### API Documentation
+
+Once the server is running, you can access the API documentation at `http://localhost:8000/docs` for the interactive Swagger UI or `http://localhost:8000/redoc` for ReDoc.
+
+## Frontend Setup
+
+Refer to the frontend README for instructions on setting up and running the frontend.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 ```
 
 # Instructions
