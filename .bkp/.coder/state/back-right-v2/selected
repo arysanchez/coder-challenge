@@ -1,0 +1,5 @@
+backend/app/apis/prompts.py
+backend/main.py
+frontend/src/api/endpoints.ts
+frontend/src/components/Sidebar.tsx
+frontend/src/types.ts

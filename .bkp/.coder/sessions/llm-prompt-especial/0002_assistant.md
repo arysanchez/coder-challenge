@@ -1,3 +1,9 @@
+To fix the error "Body has already been consumed" in the `saveSelectedPrompts` function, we need to ensure that the response body is not being consumed multiple times. This can be done by checking the response status before attempting to parse the JSON body.
+
+Let's update the `saveSelectedPrompts` function in `frontend/src/api/endpoints.ts` to handle this correctly.
+
+### frontend/src/api/endpoints.ts [coder:save]
+```typescript
 import { ApiResponse, Conversation, Message, Prompt } from '../types';
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api'; // Update this with your FastAPI server URL
@@ -58,7 +64,6 @@ export async function saveSelectedPrompts(prompts: Prompt[]): Promise<ApiRespons
   };
 }
 
-
 export async function toggleFavorite(conversationId: string, isFavorite: boolean): Promise<ApiResponse<void>> {
   const response = await fetch(`${API_BASE_URL}/conversations/${conversationId}/favorite`, {
     method: 'POST',
@@ -69,3 +74,7 @@ export async function toggleFavorite(conversationId: string, isFavorite: boolean
   });
   return response.json();
 }
+```
+[coder:end]
+
+This update ensures that the response body is only consumed once and the result is returned in a consistent format.

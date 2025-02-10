@@ -15,24 +15,17 @@ class Prompt(BaseModel):
     visibleTo: str
     visibleToGroups: List[str]
     categories: List[str]
-    createdAt: datetime
-    updatedAt: datetime
     isOwner: bool
     ownerId: str
 
 class CreatePromptRequest(BaseModel):
+    prompt: str
+
+class PromptResponse(BaseModel):
     title: str
     description: str
     prompt: str
-    visibleTo: str
-    visibleToGroups: List[str]
-    categories: List[str]
-    ownerId: str
-
-class PromptResponse(BaseModel):
     id: str
-    title: str
-    description: str
 
 # In-memory storage for prompts
 prompts_db = []

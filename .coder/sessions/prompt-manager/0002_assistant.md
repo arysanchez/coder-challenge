@@ -1,3 +1,5 @@
+### frontend/src/components/Sidebar.tsx [coder:save]
+```typescript
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Settings, Star, Sun, Moon, List, ChevronDown, ChevronUp, Check, Save, User, Plus } from 'lucide-react';
 import type { Conversation, Prompt } from '../types';
@@ -92,8 +94,6 @@ export function Sidebar({
       try {
         setIsLoading(true);
         const selectedPromptObjects = prompts.filter(prompt => selectedPrompts.includes(prompt.id));
-        console.log('Selected prompt objects:', selectedPromptObjects);
-
         const response = await saveSelectedPrompts(selectedPromptObjects);
         if (response.success) {
           setIsPromptsOpen(false);
@@ -310,3 +310,5 @@ export function Sidebar({
     </div>
   );
 }
+```
+[coder:end]
